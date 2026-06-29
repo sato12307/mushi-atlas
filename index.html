@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ムシアトラス｜蝶・トンボの分布記録を集合知化（昔ここにいた／今ここに来た）</title>
+<meta name="description" content="蝶・トンボの採集記録を公表すると集合分布図に積み上がり「昔ここにいた／今ここに来た」が見える。私蔵標本のダークデータを、産地の選択的開示で安全に集合知化。希少種の精密産地は秘匿、公開は粗座標。">
+<meta name="robots" content="index,follow">
+<meta name="theme-color" content="#0c1626">
+
+<!-- ▼ デプロイ先URL。GitHub Pages のリポジトリ名に合わせて1か所だけ直す -->
+<link rel="canonical" href="https://sato12307.github.io/mushi-atlas/">
+
+<!-- Open Graph（共有カード拡散時のリッチプレビュー＝成長ループの要） -->
+<meta property="og:type" content="website">
+<meta property="og:locale" content="ja_JP">
+<meta property="og:site_name" content="ムシアトラス">
+<meta property="og:title" content="ムシアトラス｜あなたの標本が、昔ここにいた証拠になる">
+<meta property="og:description" content="蝶・トンボの採集記録を公表→集合分布図に「昔いた／今いる」が見える。私蔵標本のダークデータを選択的産地開示で集合知化。">
+<meta property="og:url" content="https://sato12307.github.io/mushi-atlas/">
+<meta property="og:image" content="https://sato12307.github.io/mushi-atlas/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="ムシアトラス｜あなたの標本が、昔ここにいた証拠になる">
+<meta name="twitter:description" content="蝶・トンボの採集記録を公表→集合分布図に「昔いた／今いる」が見える。私蔵標本のダークデータを集合知化。">
+<meta name="twitter:image" content="https://sato12307.github.io/mushi-atlas/og.png">
+
+<!-- 構造化データ：WebApplication ＋ Dataset（Google Dataset Search 流入用） -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "ムシアトラス",
+      "url": "https://sato12307.github.io/mushi-atlas/",
+      "applicationCategory": "EducationalApplication",
+      "operatingSystem": "Web",
+      "inLanguage": "ja",
+      "description": "蝶・トンボの採集記録を公表し集合分布図として集合知化するプラットフォーム。産地の選択的開示に対応。",
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "JPY" }
+    },
+    {
+      "@type": "Dataset",
+      "name": "日本の蝶・トンボ 分布記録（市民・コレクター由来）",
+      "description": "アマチュア採集者・コレクターが公表した蝶・トンボの産地付き分布記録。気候変動による分布北上の経年変化を含む。希少種の精密産地は非公開。",
+      "keywords": ["昆虫", "蝶", "トンボ", "標本", "分布記録", "生物多様性", "分布北上", "採集記録"],
+      "inLanguage": "ja",
+      "license": "https://creativecommons.org/licenses/by/4.0/",
+      "isAccessibleForFree": true,
+      "spatialCoverage": { "@type": "Place", "name": "日本" },
+      "creator": { "@type": "Organization", "name": "ムシアトラス" }
+    }
+  ]
+}
+</script>
+
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="tag">飛ぶ虫の分布シフト</div>
+    <h1>🦋 ムシアトラス</h1>
+    <p class="lead">あなたの標本箱に眠る「いつ・どこで採れたか」は、<b>昔そこに虫がいた動かぬ証拠</b>。
+       それを公表すると、みんなの記録と重なって<b>「昔ここにいた／今ここに来た」</b>が地図に浮かびます。</p>
+    <p class="sub">博物館に寄贈しない限り個人宅で埋もれる私蔵標本のデータを、選択的な産地開示で安全に集合知化する試み。
+       希少種の精密な産地は伏せ、研究と保全には粗い分布で役立てます。</p>
+    <div class="cta-row">
+      <a class="btn" href="#demo">触ってみる（記録を公表）</a>
+      <a class="btn ghost" href="#why">なぜ作るのか</a>
+    </div>
+    <p class="sub" style="margin-top:18px;font-size:13px">※これは粗削りの作業版デモです。データはサンプル、サーバを使わずブラウザ内だけで動きます。</p>
+  </div>
+</header>
+
+<section id="why">
+  <div class="wrap">
+    <h2>なぜ作るのか <span class="small">— 既存サービスが構造的に届かない空白</span></h2>
+    <div class="cols3">
+      <div class="pcard"><b>私蔵標本は埋もれる</b><br>
+        GBIF・科博S-Netは<span class="em">機関の標本のみ</span>。個人コレクションの産地データはほぼ入らず、所有者の死後に散逸する。</div>
+      <div class="pcard"><b>過去分布は誰も持てない</b><br>
+        Biome等の観察アプリは<span class="em">2019年以降の今</span>のデータ。標本は採集年（1965年も）を抱え、<span class="em">ローンチ前の分布</span>を語れる。</div>
+      <div class="pcard"><b>記録文化は紙に散在</b><br>
+        月刊むし・全国の同好会誌に半世紀の採集記録があるが、<span class="em">横断検索もデジタル分布図化もされていない</span>。</div>
+    </div>
+    <p class="muted" style="margin-top:16px">堀＝アマチュア昆虫学が50年かけて築いた「誰が何の権威か」の評判の網。仕組みは真似できても、その網は外へ持ち出せない。</p>
+  </div>
+</section>
+
+<section id="demo">
+  <div class="wrap">
+    <h2>触ってみる <span class="small">— 種を選ぶ → 集合分布図 → 記録を公表 → 共有カード</span></h2>
+    <div class="tabs">
+      <button data-g="butterfly" class="on">チョウ</button>
+      <button data-g="dragonfly">トンボ</button>
+    </div>
+    <div class="demo">
+      <div class="splist" id="splist"></div>
+      <div>
+        <div class="mapwrap"><canvas id="map" width="520" height="620"></canvas></div>
+        <div class="panel" id="sidepanel"></div>
+
+        <div class="panel">
+          <h3 style="margin-top:0">記録を公表する</h3>
+          <p class="muted" style="font-size:13px;margin-top:0">標本箱を全部入力する必要はありません。自慢したい1件からどうぞ。北海道など空白の県に入れると「初記録」になります。</p>
+          <form class="form" id="pubform">
+            <label>記録者ハンドル<input id="f_handle" placeholder="例: mushiko" required></label>
+            <label>種名（和名）<input id="f_species" list="f_specieslist" placeholder="種を選択"><datalist id="f_specieslist"></datalist></label>
+            <div class="row">
+              <label style="flex:2">採集地<select id="f_pref"></select></label>
+              <label style="flex:1">採集年<input id="f_year" type="number" placeholder="2025"></label>
+            </div>
+            <label>公開する産地の粒度
+              <select id="f_disc">
+                <option value="city">市町村まで公開</option>
+                <option value="pref" selected>都道府県まで公開</option>
+                <option value="precise">精密まで公開</option>
+                <option value="hidden">地点を公開しない</option>
+              </select>
+              <small>※レッドリスト種は自動で県まで、保護種は自動で地点非公開に粗化されます。</small>
+            </label>
+            <button class="btn" type="submit">公表してカードを作る →</button>
+          </form>
+          <div id="cardout"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2>記録者ランキング <span class="small">— 持ち出せない「権威/評判の網」が堀</span></h2>
+    <table id="leaders"><thead><tr><th>#</th><th>記録者</th><th>初記録（県）</th><th>記録</th><th>種</th></tr></thead><tbody></tbody></table>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="note">作業版プロトタイプ。データはサンプルで、ページを再読込すると追加した記録はリセットされます。
+      本番は種マスタを全種化、市町村ジオコーダ＋メッシュ分布、ラベルOCRによる入力自動化、認証を追加予定。
+      産地の選択的開示・保護種の自動非公開はこのデモでも実際に動いています。</div>
+  </div>
+</footer>
+
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
