@@ -70,3 +70,28 @@ th,td{border-bottom:1px solid var(--line);padding:7px 8px;text-align:left}
 .hi{color:var(--red);font-weight:700}
 footer{padding:30px 0;color:#6f86a4;font-size:13px}
 .note{background:#13243b;border:1px solid var(--line);border-radius:10px;padding:12px;color:var(--mut);font-size:13px}
+
+/* ---- 読みもの（記事ページ）---- */
+.topbar{background:var(--bg2);border-bottom:1px solid var(--line);padding:12px 0}
+.topbar a{color:var(--mut);text-decoration:none;font-size:14px}
+.topbar a:hover{color:#fff}
+.article{max-width:720px;margin:0 auto;padding:34px 20px 10px}
+.article .kicker{color:var(--shift);font-weight:700;letter-spacing:.08em;font-size:13px}
+.article h1{font-size:32px;line-height:1.35;color:#fff;margin:8px 0 10px}
+.article .meta{color:#6f86a4;font-size:13px;margin-bottom:24px;border-bottom:1px solid var(--line);padding-bottom:16px}
+.article h2{font-size:21px;color:#fff;margin:30px 0 8px;border:0}
+.article p{font-size:16.5px;color:#dbe6f3;margin:14px 0}
+.article blockquote{margin:18px 0;padding:12px 18px;border-left:3px solid var(--shift);background:#13243b;color:#e7f0fb}
+.article .lead{font-size:18px;color:#fff}
+.article .cta{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px;margin:28px 0}
+.article .cta a.btn{margin-top:8px}
+.article .src{color:#6f86a4;font-size:12.5px;margin-top:8px}
+.yomi{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:16px}
+@media(max-width:680px){.yomi{grid-template-columns:1fr}}
+.ycard{display:block;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px;text-decoration:none;color:var(--ink)}
+.ycard:hover{border-color:var(--accent)}
+.ycard .k{color:var(--shift);font-size:12px;font-weight:700}
+.ycard h3{margin:6px 0;color:#fff;font-size:17px}
+.ycard p{color:var(--mut);font-size:13.5px;margin:0}
+
+.spsearch{width:100%;padding:9px 11px;margin-bottom:8px;background:#0c1626;border:1px solid var(--line);border-radius:9px;color:var(--ink);font-size:14px}

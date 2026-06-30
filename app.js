@@ -109,7 +109,10 @@ function drawMap(ctx, x, y, w, h, sid, highlightId, opts) {
 
 // ---- UI ----
 function renderSpeciesList() {
-  const list = SP.filter(s => s.group === group).sort((a, b) => (b.range_shift - a.range_shift) || (b.redlist - a.redlist) || (b.count - a.count));
+  const q = ($("#spsearch") && $("#spsearch").value.trim().toLowerCase()) || "";
+  let list = SP.filter(s => s.group === group);
+  if (q) list = list.filter(s => (s.wamei || "").toLowerCase().includes(q) || (s.gakumei || "").toLowerCase().includes(q));
+  list = list.sort((a, b) => (b.range_shift - a.range_shift) || (b.redlist - a.redlist) || (b.count - a.count));
   const el = $("#splist"); el.innerHTML = "";
   list.forEach(s => {
     const cnt = RECORDS.filter(r => r.sid === s.id).length;
@@ -142,11 +145,12 @@ function renderSpecies() {
   $("#sidepanel").innerHTML =
     `<h3 style="margin-top:0">${sp.wamei} <span class="gaku">${sp.gakumei}</span></h3>
      ${sp.protected ? '<div class="badge" style="background:#7a1020;color:#fff">種の保存法・保護種＝地点強制非公開</div>' : (sp.redlist ? '<div class="badge red" style="background:#b13;color:#fff">レッドリスト種＝県まで自動粗化</div>' : '')}
-     ${fr ? `<p class="frontier">📍 分布前線：${fr.pref}（${fr.year}年・@${fr.user}）</p>` : ''}
+     ${fr ? `<p class="frontier">📍 分布前線：${fr.pref}（${fr.year || '年不明'}・${fr.src === 'gbif' ? '公開記録' : '@' + fr.user}）</p>` : ''}
      <p class="gap">記録${recs.length}件 ／ 空白の県：${gaps.slice(0, 6).join("、")}${gaps.length > 6 ? ` ほか${gaps.length - 6}` : ''}</p>
      <div class="reclist">${recs.slice().sort((a, b) => (a.year || 0) - (b.year || 0)).map(r => {
       const bs = badgesFor(r).map(b => `<span class="badge ${b.c}">${b.t}</span>`).join("");
-      return `<div>${r.year || "—"} ${placeLabel(r, sp)} <span class="gaku">@${r.user}</span> ${bs}</div>`;
+      const who = r.src === "gbif" ? '<span class="gaku">（公開記録）</span>' : `<span class="gaku">@${r.user}</span>`;
+      return `<div>${r.year || "—"} ${placeLabel(r, sp)} ${who} ${bs}</div>`;
     }).join("")}</div>`;
 
   // フォームの種を同期
@@ -216,17 +220,23 @@ function renderCard(rec) {
 function roundRect(ctx, x, y, w, h, r) { ctx.beginPath(); ctx.moveTo(x + r, y); ctx.arcTo(x + w, y, x + w, y + h, r); ctx.arcTo(x + w, y + h, x, y + h, r); ctx.arcTo(x, y + h, x, y, r); ctx.arcTo(x, y, x + w, y, r); ctx.closePath(); }
 
 function renderLeaders() {
+  // 公開記録(GBIFベースライン)は除き、ユーザーの貢献だけを集計＝堀になる"記録者の網"
   const users = {};
-  RECORDS.forEach(r => {
+  RECORDS.filter(r => r.src !== "gbif").forEach(r => {
     const u = users[r.user] || (users[r.user] = { records: 0, species: new Set(), first: 0 });
     u.records++; u.species.add(r.sid);
   });
   Object.keys(users).forEach(h => {
-    SP.forEach(s => { const f = prefFirsts(s.id); RECORDS.filter(r => r.user === h && f[r.id]).forEach(() => users[h].first++); });
+    SP.forEach(s => { const f = prefFirsts(s.id); RECORDS.filter(r => r.user === h && r.src !== "gbif" && f[r.id]).forEach(() => users[h].first++); });
   });
   const rows = Object.entries(users).map(([h, u]) => ({ h, records: u.records, species: u.species.size, first: u.first }))
     .sort((a, b) => (b.first - a.first) || (b.records - a.records)).slice(0, 12);
-  $("#leaders tbody").innerHTML = rows.map((r, i) =>
+  const tb = $("#leaders tbody");
+  if (!rows.length) {
+    tb.innerHTML = `<tr><td colspan="5" class="muted" style="padding:14px">まだ記録者がいません。下のフォームから<b>最初の貢献者</b>になりましょう — あなたの名前がここに最初に刻まれます。</td></tr>`;
+    return;
+  }
+  tb.innerHTML = rows.map((r, i) =>
     `<tr><td>${i + 1}</td><td>@${r.h}</td><td class="hi">${r.first}</td><td>${r.records}</td><td>${r.species}</td></tr>`).join("");
 }
 
@@ -235,6 +245,8 @@ function initForm() {
   const dl = $("#f_specieslist");
   dl.innerHTML = SP.map(s => `<option value="${s.wamei}">${s.gakumei}</option>`).join("");
   $("#pubform").addEventListener("submit", publishRecord);
+  const sb = $("#spsearch");
+  if (sb) sb.addEventListener("input", () => { renderSpeciesList(); renderSpecies(); });
 }
 
 document.querySelectorAll(".tabs button").forEach(b => b.onclick = () => {

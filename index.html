@@ -101,7 +101,10 @@
       <button data-g="dragonfly">トンボ</button>
     </div>
     <div class="demo">
-      <div class="splist" id="splist"></div>
+      <div>
+        <input id="spsearch" class="spsearch" placeholder="🔍 種名で検索（和名・学名）">
+        <div class="splist" id="splist"></div>
+      </div>
       <div>
         <div class="mapwrap"><canvas id="map" width="520" height="620"></canvas></div>
         <div class="panel" id="sidepanel"></div>
@@ -141,11 +144,29 @@
   </div>
 </section>
 
+<section id="yomimono">
+  <div class="wrap">
+    <h2>読みもの <span class="small">— なぜこれを集めるのか</span></h2>
+    <div class="yomi">
+      <a class="ycard" href="yomimono-dark-data.html">
+        <div class="k">運営より</div>
+        <h3>標本箱に眠る、消えゆく証拠</h3>
+        <p>個人の標本箱には「昔そこにいた」動かぬ証拠が眠っている。でも博物館は満杯で、多くは捨てられていく。なぜムシアトラスを作ったのか。</p>
+      </a>
+      <a class="ycard" href="yomimono-tsumaguro.html">
+        <div class="k">解説</div>
+        <h3>ツマグロヒョウモンは、なぜ北をめざしたのか</h3>
+        <p>30年前は近畿以西の蝶。いまは東北・北海道でも。北上の証拠は、過去の標本記録の中にしかない。標本が記録した気候変動の物語。</p>
+      </a>
+    </div>
+  </div>
+</section>
+
 <footer>
   <div class="wrap">
-    <div class="note">作業版プロトタイプ。データはサンプルで、ページを再読込すると追加した記録はリセットされます。
-      本番は種マスタを全種化、市町村ジオコーダ＋メッシュ分布、ラベルOCRによる入力自動化、認証を追加予定。
-      産地の選択的開示・保護種の自動非公開はこのデモでも実際に動いています。</div>
+    <div class="note">分布の下地は <b>GBIF の公開出現データ（日本・座標つき）</b>を「県 × 最古の記録年」に整理したものです（データ提供：GBIF.org）。年代色は<b>その県で最初に記録された年代</b>を示します。
+      この作業版では、あなたが追加した記録はこの端末内だけに保持され、再読込で消えます（デモ動作）。
+      産地の選択的開示・保護種の自動非公開は実際に動いています。本番はラベル写真OCRによる入力自動化・市町村メッシュ分布・認証を追加予定。</div>
   </div>
 </footer>
 
