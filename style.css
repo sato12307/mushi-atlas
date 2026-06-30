@@ -58,7 +58,7 @@ canvas#map{width:100%;max-width:520px;height:auto}
 
 /* form */
 .form label{display:block;margin:10px 0;font-size:14px;color:var(--mut)}
-.form input,.form select{display:block;width:100%;margin-top:4px;padding:8px;background:#0c1626;border:1px solid var(--line);border-radius:7px;color:var(--ink)}
+.form input,.form select,.form textarea{display:block;width:100%;margin-top:4px;padding:8px;background:#0c1626;border:1px solid var(--line);border-radius:7px;color:var(--ink)}
 .form .row{display:flex;gap:10px}
 .form small{color:#7e98b8}
 #cardout{margin-top:14px;text-align:center}
@@ -95,3 +95,5 @@ footer{padding:30px 0;color:#6f86a4;font-size:13px}
 .ycard p{color:var(--mut);font-size:13.5px;margin:0}
 
 .spsearch{width:100%;padding:9px 11px;margin-bottom:8px;background:#0c1626;border:1px solid var(--line);border-radius:9px;color:var(--ink);font-size:14px}
+
+.recnote{color:#cfe6ff;font-size:12.5px;margin:2px 0 0 0;padding:3px 8px;background:#13243b;border-left:2px solid var(--shift);border-radius:0 6px 6px 0}

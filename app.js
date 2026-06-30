@@ -12,6 +12,7 @@ let curSid = null;
 
 const $ = sel => document.querySelector(sel);
 const spById = id => SP.find(s => s.id === id);
+const esc = s => (s || "").replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
 
 // ---- 産地の選択的開示（Pythonの geo.py と同じロジック）----
 const ORDER = ["precise", "city", "pref", "hidden"];
@@ -132,8 +133,10 @@ function renderSpecies() {
   if (!curSid) return;
   const sp = spById(curSid);
   const cv = $("#map"); const ctx = cv.getContext("2d");
-  cv.width = 520; cv.height = 620;
-  ctx.clearRect(0, 0, cv.width, cv.height);
+  const dpr = Math.min(window.devicePixelRatio || 1, 3);   // 高解像度ディスプレイで鮮明化
+  cv.width = 520 * dpr; cv.height = 620 * dpr;
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  ctx.clearRect(0, 0, 520, 620);
   ctx.fillStyle = "#222"; ctx.font = "17px 'Yu Gothic UI','Meiryo',sans-serif";
   ctx.fillText(sp.wamei + " の分布記録" + (sp.range_shift ? "（北上を年代色で）" : ""), 10, 24);
   drawMap(ctx, 10, 34, 500, 560, curSid, null, { legend: true, hiddenNote: true });
@@ -150,7 +153,8 @@ function renderSpecies() {
      <div class="reclist">${recs.slice().sort((a, b) => (a.year || 0) - (b.year || 0)).map(r => {
       const bs = badgesFor(r).map(b => `<span class="badge ${b.c}">${b.t}</span>`).join("");
       const who = r.src === "gbif" ? '<span class="gaku">（公開記録）</span>' : `<span class="gaku">@${r.user}</span>`;
-      return `<div>${r.year || "—"} ${placeLabel(r, sp)} ${who} ${bs}</div>`;
+      const note = r.note ? `<div class="recnote">💬 ${esc(r.note)}</div>` : "";
+      return `<div>${r.year || "—"} ${placeLabel(r, sp)} ${who} ${bs}${note}</div>`;
     }).join("")}</div>`;
 
   // フォームの種を同期
@@ -163,10 +167,11 @@ function publishRecord(e) {
   const rec = {
     id: nextId++, sid: sp.id, pref: $("#f_pref").value,
     year: parseInt($("#f_year").value) || null, user: ($("#f_handle").value.trim() || "guest"),
-    disclosure: $("#f_disc").value,
+    disclosure: $("#f_disc").value, note: $("#f_note").value.trim(),
   };
   if (!rec.pref) { alert("都道府県を選んでください"); return; }
   RECORDS.push(rec);
+  $("#f_note").value = "";
   curSid = sp.id;
   renderSpeciesList(); renderSpecies(); renderLeaders();
   renderCard(rec);
@@ -206,8 +211,13 @@ function renderCard(rec) {
   drawMap(ctx, 840, 300, 330, 300, rec.sid, rec.id, {});
   ctx.strokeStyle = "#3b5f86"; ctx.strokeRect(840, 300, 330, 300);
   // フッタ
-  ctx.fillStyle = "#9fc0e6"; ctx.font = "23px 'Yu Gothic UI','Meiryo',sans-serif";
-  ctx.fillText(`記録者: @${rec.user}    #ムシアトラス  地図を埋めよう`, 500, 596);
+  // メモ（採集の物語）— 公式DBに無い、ここだけの層
+  if (rec.note) {
+    ctx.fillStyle = "#cfe6ff"; ctx.font = "22px 'Yu Gothic UI','Meiryo',sans-serif";
+    wrapText(ctx, "💬 " + rec.note, 500, 498, 320, 28, 3);
+  }
+  ctx.fillStyle = "#9fc0e6"; ctx.font = "22px 'Yu Gothic UI','Meiryo',sans-serif";
+  ctx.fillText(`記録者: @${rec.user}    #ムシアトラス`, 500, 600);
 
   const out = $("#cardout");
   out.innerHTML = "<h3>✓ 公表しました — 共有カード</h3><p class='muted'>このカードをXや同好会に貼ると、見た人が地図の空白を埋めに来ます（自己拡散ループ）。</p>";
@@ -218,6 +228,16 @@ function renderCard(rec) {
   out.appendChild(document.createElement("br")); out.appendChild(a);
 }
 function roundRect(ctx, x, y, w, h, r) { ctx.beginPath(); ctx.moveTo(x + r, y); ctx.arcTo(x + w, y, x + w, y + h, r); ctx.arcTo(x + w, y + h, x, y + h, r); ctx.arcTo(x, y + h, x, y, r); ctx.arcTo(x, y, x + w, y, r); ctx.closePath(); }
+function wrapText(ctx, text, x, y, maxW, lh, maxLines) {
+  let line = "", ln = 0;
+  for (const ch of text) {
+    if (ctx.measureText(line + ch).width > maxW) {
+      if (ln === maxLines - 1) { ctx.fillText(line.slice(0, -1) + "…", x, y + ln * lh); return; }
+      ctx.fillText(line, x, y + ln * lh); ln++; line = ch;
+    } else line += ch;
+  }
+  ctx.fillText(line, x, y + ln * lh);
+}
 
 function renderLeaders() {
   // 公開記録(GBIFベースライン)は除き、ユーザーの貢献だけを集計＝堀になる"記録者の網"

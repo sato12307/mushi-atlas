@@ -64,11 +64,11 @@
 
 <header class="hero">
   <div class="wrap">
-    <div class="tag">飛ぶ虫の分布シフト</div>
-    <h1>🦋 ムシアトラス</h1>
+    <div class="tag">標本がつくる、虫の分布と記憶の地図</div>
+    <h1>🦋🪲 ムシアトラス</h1>
     <p class="lead">あなたの標本箱に眠る「いつ・どこで採れたか」は、<b>その虫が昔そこにいた動かぬ証拠</b>。
-       公表すると、みんなの記録と重なって<b>「昔ここにいた／今ここに来た」</b>が地図に浮かびます。</p>
-    <p class="sub">蝶とトンボの採集記録を持ち寄り、分布の移ろいをみんなで描く地図です。
+       公表すると、みんなの記録と重なって<b>分布の地図</b>になり、一件ごとの<b>採集の物語</b>もそこに残せます。</p>
+    <p class="sub">蝶・トンボ・クワガタの採集記録を持ち寄る地図です。蝶やトンボは「北上」の移ろいが、クワガタは「産地」の地図が見えてきます。
        希少種の精密な産地は自動で伏せるので、安心して載せられます。</p>
     <div class="cta-row">
       <a class="btn" href="#demo">分布図を見る・記録を公表する</a>
@@ -99,6 +99,7 @@
     <div class="tabs">
       <button data-g="butterfly" class="on">チョウ</button>
       <button data-g="dragonfly">トンボ</button>
+      <button data-g="beetle">クワガタ</button>
     </div>
     <div class="demo">
       <div>
@@ -127,6 +128,10 @@
                 <option value="hidden">地点を公開しない</option>
               </select>
               <small>※レッドリスト種は自動で県まで、保護種は自動で地点非公開に粗化されます。</small>
+            </label>
+            <label>採集メモ・物語（任意）
+              <textarea id="f_note" rows="2" placeholder="例：能勢の灯火採集で。／菌糸ビン3本目で羽化。東北産のスマートな個体。／祖父の標本箱から。"></textarea>
+              <small>その個体の物語＝公式DBには無い、ここだけの価値になります。</small>
             </label>
             <button class="btn" type="submit">公表してカードを作る →</button>
           </form>
@@ -162,6 +167,11 @@
         <div class="k">解説</div>
         <h3>ナガサキアゲハは、なぜ北へ広がったのか</h3>
         <p>シーボルトが長崎で得た南の黒いアゲハ。100年で九州から関東へ、いまは福島・宮城にも。温暖化の指標種の北上を生態と採集地から。</p>
+      </a>
+      <a class="ycard" href="yomimono-ookuwagata.html">
+        <div class="k">クワガタ</div>
+        <h3>オオクワガタ ― 76.6mmの伝説と、産地に刻まれた体型</h3>
+        <p>野生最大76.6mmの伝説、三大産地、山梨は顎長め・九州は太め…と産地に刻まれる体型、そして血統の物語。黒いダイヤの記憶。</p>
       </a>
     </div>
   </div>
