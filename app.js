@@ -82,10 +82,23 @@ function project(lat, lon, x, y, w, h) {
 }
 function drawMap(ctx, x, y, w, h, sid, highlightId, opts) {
   opts = opts || {};
-  ctx.fillStyle = "#ffffff"; ctx.fillRect(x, y, w, h);
-  // 下地：都道府県点（日本列島の形）
-  ctx.fillStyle = "#dddddd";
-  for (const p in PREFS) { const [px, py] = project(PREFS[p].lat, PREFS[p].lon, x, y, w, h); ctx.beginPath(); ctx.arc(px, py, Math.max(1.5, w / 200), 0, 7); ctx.fill(); }
+  ctx.fillStyle = "#eef3f7"; ctx.fillRect(x, y, w, h); // 海
+  // 下地：日本列島（実海岸線・Natural Earth簡略化）
+  ctx.save();
+  ctx.beginPath(); ctx.rect(x, y, w, h); ctx.clip();
+  if (typeof JAPAN_LAND !== "undefined") {
+    ctx.beginPath();
+    for (const ring of JAPAN_LAND) {
+      for (let i = 0; i < ring.length; i++) {
+        const [px, py] = project(ring[i][1], ring[i][0], x, y, w, h); // ring=[lon,lat]
+        if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+      }
+      ctx.closePath();
+    }
+    ctx.fillStyle = "#e7ecd9"; ctx.fill();                              // 陸地
+    ctx.lineWidth = Math.max(0.6, w / 700); ctx.strokeStyle = "#b9c3a6"; ctx.stroke(); // 海岸線
+  }
+  ctx.restore();
   // 記録
   let hidden = 0;
   RECORDS.filter(r => r.sid === sid).forEach(r => {
